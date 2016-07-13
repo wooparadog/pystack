@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import subprocess
 import tempfile
 
@@ -30,7 +31,7 @@ THREAD_STACK_COMMANDS = [
 
 def print_stack(pid, include_greenlet=False, verbose=False):
     """Executes a file in a running Python process."""
-    tmp_file = tempfile.mktemp()
+    tmp_fd, tmp_path = tempfile.mkstemp()
     commands = []
     commands.append(FILE_OPEN_COMMAND)
     commands.extend(THREAD_STACK_COMMANDS)
@@ -42,7 +43,7 @@ def print_stack(pid, include_greenlet=False, verbose=False):
     gdb_cmds = [
         'PyGILState_Ensure()',
         'PyRun_SimpleString("exec(\\"%s\\")")' % (
-            command % tmp_file
+            command % tmp_path
             ),
         'PyGILState_Release($1)',
         ]
@@ -55,8 +56,7 @@ def print_stack(pid, include_greenlet=False, verbose=False):
     if verbose:
         print out
         print err
-    with open(tmp_file) as fo:
-        print fo.read()
+    print os.read(tmp_fd, 10240)
 
 
 @click.command()
