@@ -43,7 +43,7 @@ def make_gdb_args(pid, command):
 
 def make_lldb_args(pid, command):
     statements = [
-        r'expr (void *) $gil = (void *) PyGILState_Ensure()',
+        r'expr void * $gil = (void *) PyGILState_Ensure()',
         r'expr (void) PyRun_SimpleString("exec(\"%s\")")' % command,
         r'expr (void) PyGILState_Release($gil)',
     ]
