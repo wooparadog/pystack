@@ -9,7 +9,7 @@ entry_points = ["pstack = stack:stack"]
 
 setup(
     name="pstack",
-    version='0.3',
+    version='0.4',
     description="Tool to print python thread and greenlet stacks",
     author="Haochuan Guo",
     author_email="guohaochuan@gmail.com",
