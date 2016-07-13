@@ -59,7 +59,12 @@ def print_stack(pid, include_greenlet=False, verbose=False):
     print os.read(tmp_fd, 10240)
 
 
-@click.command()
+CONTEXT_SETTINGS = {
+    'help_option_names': ['-h', '--help'],
+}
+
+
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.argument('pid', required=True, type=int)
 @click.option('--include-greenlet', default=False, is_flag=True,
               help="Also print greenlet stacks")
