@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import subprocess
 import tempfile
 import platform
+import functools
 
 import click
 
@@ -80,7 +82,9 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
     if verbose:
         print out
         print err
-    print os.read(tmp_fd, 10240)
+
+    for chunk in iter(functools.partial(os.read, tmp_fd, 1024), ''):
+        sys.stdout.write(chunk)
 
 
 CONTEXT_SETTINGS = {
