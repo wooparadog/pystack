@@ -67,6 +67,7 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
         environ['PATH'] = '/usr/bin:%s' % environ.get('PATH', '')
 
     tmp_fd, tmp_path = tempfile.mkstemp()
+    os.chmod(tmp_path, 0777)
     commands = []
     commands.append(FILE_OPEN_COMMAND)
     commands.extend(THREAD_STACK_COMMANDS)
@@ -75,9 +76,9 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
     commands.append(FILE_CLOSE_COMMAND)
     command = r';'.join(commands)
 
-    args = make_args(pid, command % tmp_path)
+    args = ' '.join(make_args(pid, command % tmp_path))
     process = subprocess.Popen(
-        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=environ)
+        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     if verbose:
         print out
