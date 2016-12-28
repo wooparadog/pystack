@@ -50,7 +50,7 @@ def make_lldb_args(pid, command):
         r'expr (void) PyGILState_Release($gil)',
     ]
     arguments = ['lldb', '-p', str(pid), '--batch']
-    arguments.extend('--one-line=%s' % s for s in statements)
+    arguments.extend("--one-line='%s'" % s for s in statements)
     return arguments
 
 
