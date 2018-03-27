@@ -101,13 +101,13 @@ CONTEXT_SETTINGS = {
 @click.option('-d', '--debugger', type=click.Choice(['gdb', 'lldb']))
 @click.option('-v', '--verbose', default=False, is_flag=True,
               help="Verbosely print error and warnings")
-def stack(pid, include_greenlet, debugger, verbose):
+def main(pid, include_greenlet, debugger, verbose):
     '''Print stack of python process.
 
-    $ pstack <pid>
+    $ pystack <pid>
     '''
     return print_stack(pid, include_greenlet, debugger, verbose)
 
 
 if __name__ == '__main__':
-    stack()
+    main()

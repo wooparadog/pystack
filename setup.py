@@ -3,16 +3,16 @@
 from setuptools import setup
 
 setup(
-    name='pstack',
+    name='pystack',
     version='0.6',
     description='Tool to print python thread and greenlet stacks',
     author="Haochuan Guo",
     author_email='guohaochuan@gmail.com',
-    py_modules=['stack'],
-    url='https://github.com/wooparadog/pstack/',
+    py_modules=['pystack'],
+    url='https://github.com/wooparadog/pystack/',
     entry_points={
         'console_scripts': [
-            ['pstack = stack:stack'],
+            ['pystack = pystack:main'],
         ],
     },
     install_requires=[
