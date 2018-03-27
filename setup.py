@@ -9,8 +9,11 @@ setup(
     long_description=open('README.md').read(),
     author='Haochuan Guo',
     author_email='guohaochuan@gmail.com',
+    maintainer='Jiangge Zhang',
+    maintainer_email='tonyseek@gmail.com',
     py_modules=['pystack'],
     zip_safe=False,
+    license='MIT',
     url='https://github.com/wooparadog/pystack/',
     keywords=['pystack', 'pstack', 'jstack', 'gdb', 'lldb', 'greenlet'],
     entry_points={
