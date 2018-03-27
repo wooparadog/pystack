@@ -1,5 +1,6 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
+from __future__ import absolute_import, print_function
 
 import os
 import sys
@@ -39,7 +40,7 @@ def make_gdb_args(pid, command):
         r'call PyGILState_Release($1)',
     ]
     arguments = ['gdb', '-p', str(pid), '-batch']
-    arguments.extend("-eval-command='%s'" % s for s in statements)
+    arguments.extend("-eval-command=%s" % s for s in statements)
     return arguments
 
 
@@ -67,7 +68,7 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
         environ['PATH'] = '/usr/bin:%s' % environ.get('PATH', '')
 
     tmp_fd, tmp_path = tempfile.mkstemp()
-    os.chmod(tmp_path, 0777)
+    os.chmod(tmp_path, 0o777)
     commands = []
     commands.append(FILE_OPEN_COMMAND)
     commands.extend(THREAD_STACK_COMMANDS)
@@ -76,13 +77,13 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
     commands.append(FILE_CLOSE_COMMAND)
     command = r';'.join(commands)
 
-    args = ' '.join(make_args(pid, command % tmp_path))
+    args = make_args(pid, command % tmp_path)
     process = subprocess.Popen(
-        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     if verbose:
-        print out
-        print err
+        print(out, file=sys.stderr)
+        print(err, file=sys.stderr)
 
     for chunk in iter(functools.partial(os.read, tmp_fd, 1024), ''):
         sys.stdout.write(chunk)
@@ -106,6 +107,7 @@ def stack(pid, include_greenlet, debugger, verbose):
     $ pystack <pid>
     '''
     return print_stack(pid, include_greenlet, debugger, verbose)
+
 
 if __name__ == '__main__':
     stack()
