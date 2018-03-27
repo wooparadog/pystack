@@ -3,10 +3,11 @@
 from setuptools import setup
 
 setup(
-    name='pystack',
-    version='0.7',
+    name='pystack-debugger',
+    version='0.7.1',
     description='Tool to print python thread and greenlet stacks',
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     author='Haochuan Guo',
     author_email='guohaochuan@gmail.com',
     maintainer='Jiangge Zhang',

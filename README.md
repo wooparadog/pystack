@@ -9,7 +9,7 @@ Idea stolen from [pyrasite](https://github.com/lmacken/pyrasite)
 ## Install
 
 ```
-$ pip install pystack
+$ pip install pystack-debugger
 ```
 
 ## Usage
@@ -17,5 +17,5 @@ $ pip install pystack
 You may need to run it with `sudo`.
 
 ```
-$ sudo pstack <pid> [--include-greenlet]
+$ sudo pystack <pid> [--include-greenlet]
 ```
