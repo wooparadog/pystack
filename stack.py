@@ -1,5 +1,6 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
+from __future__ import absolute_import, print_function
 
 import os
 import sys
@@ -67,7 +68,7 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
         environ['PATH'] = '/usr/bin:%s' % environ.get('PATH', '')
 
     tmp_fd, tmp_path = tempfile.mkstemp()
-    os.chmod(tmp_path, 0777)
+    os.chmod(tmp_path, 0o777)
     commands = []
     commands.append(FILE_OPEN_COMMAND)
     commands.extend(THREAD_STACK_COMMANDS)
@@ -81,8 +82,8 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
         args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     if verbose:
-        print out
-        print err
+        print(out, file=sys.stderr)
+        print(err, file=sys.stderr)
 
     for chunk in iter(functools.partial(os.read, tmp_fd, 1024), ''):
         sys.stdout.write(chunk)
