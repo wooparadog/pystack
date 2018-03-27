@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='pystack',
-    version='0.6',
+    version='0.7',
     description='Tool to print python thread and greenlet stacks',
     long_description=open('README.md').read(),
     author='Haochuan Guo',
