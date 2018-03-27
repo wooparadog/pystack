@@ -39,7 +39,7 @@ def make_gdb_args(pid, command):
         r'call PyGILState_Release($1)',
     ]
     arguments = ['gdb', '-p', str(pid), '-batch']
-    arguments.extend("-eval-command='%s'" % s for s in statements)
+    arguments.extend("-eval-command=%s" % s for s in statements)
     return arguments
 
 
@@ -76,9 +76,9 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
     commands.append(FILE_CLOSE_COMMAND)
     command = r';'.join(commands)
 
-    args = ' '.join(make_args(pid, command % tmp_path))
+    args = make_args(pid, command % tmp_path)
     process = subprocess.Popen(
-        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     if verbose:
         print out
@@ -106,6 +106,7 @@ def stack(pid, include_greenlet, debugger, verbose):
     $ pystack <pid>
     '''
     return print_stack(pid, include_greenlet, debugger, verbose)
+
 
 if __name__ == '__main__':
     stack()
