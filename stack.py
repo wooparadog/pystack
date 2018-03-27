@@ -104,7 +104,7 @@ CONTEXT_SETTINGS = {
 def stack(pid, include_greenlet, debugger, verbose):
     '''Print stack of python process.
 
-    $ pystack <pid>
+    $ pstack <pid>
     '''
     return print_stack(pid, include_greenlet, debugger, verbose)
 
