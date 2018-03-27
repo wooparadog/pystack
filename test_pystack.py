@@ -7,7 +7,7 @@ from pytest import fixture, mark, param
 from distutils.spawn import find_executable
 from click.testing import CliRunner
 
-import stack as main
+from pystack import main
 
 
 skipif_non_gdb = mark.skipif(
@@ -42,7 +42,6 @@ def cli():
     param(STATEMENTS['sleep'], 'lldb', marks=skipif_non_lldb),
 ], indirect=['process'])
 def test_smoke(cli, process, debugger):
-    pid = str(process.pid)
-    result = cli.invoke(main.stack, [pid, '--debugger', debugger])
+    result = cli.invoke(main, [str(process.pid), '--debugger', debugger])
     assert result.exit_code == 0
     assert '  File "<string>", line 1, in <module>\n' in result.output
