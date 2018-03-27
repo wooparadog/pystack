@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(
-    name='pystack-debugger',
+    name='pstack',
     version='0.7.1',
     description='Tool to print python thread and greenlet stacks',
     long_description=open('README.md').read(),
