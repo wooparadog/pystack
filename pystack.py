@@ -12,31 +12,31 @@ import functools
 import click
 
 
-FILE_OPEN_COMMAND = r"f = open(\\\"%s\\\", \\\"w\\\")"
-FILE_CLOSE_COMMAND = r"f.close()"
+FILE_OPEN_COMMAND = r'f = open(\"%s\", \"w\")'
+FILE_CLOSE_COMMAND = r'f.close()'
 
 GREENLET_STACK_COMMANDS = [
     r'import gc,greenlet,traceback',
-    r"objs=[ob for ob in gc.get_objects() if "
-    r"isinstance(ob,greenlet.greenlet) if ob]",
-    r"f.write(\\\"\\\\nDumping Greenlets....\\\\n\\\\n\\\\n\\\")",
-    r"f.write(\\\"\\\\n---------------\\\\n\\\\n\\\".join("
-    r"\\\"\\\".join(traceback.format_stack(o.gr_frame)) for o in objs))",
-    ]
+    r'objs=[ob for ob in gc.get_objects() if '
+    r'isinstance(ob,greenlet.greenlet) if ob]',
+    r'f.write(\"\\nDumping Greenlets....\\n\\n\\n\")',
+    r'f.write(\"\\n---------------\\n\\n\".join('
+    r'\"\".join(traceback.format_stack(o.gr_frame)) for o in objs))',
+]
 
 THREAD_STACK_COMMANDS = [
     r'import gc,traceback,itertools,sys',
-    r"f.write(\\\"Dumping Threads....\\\\n\\\\n\\\\n\\\")",
-    r"f.write(\\\"\\\\n---------------\\\\n\\\\n\\\".join("
-    r"\\\"\\\".join(traceback.format_stack(o)) for o in "
-    r"sys._current_frames().itervalues()))",
-    ]
+    r'f.write(\"Dumping Threads....\\n\\n\\n\")',
+    r'f.write(\"\\n---------------\\n\\n\".join('
+    r'\"\".join(traceback.format_stack(o)) for o in '
+    r'sys._current_frames().itervalues()))',
+]
 
 
 def make_gdb_args(pid, command):
     statements = [
         r'call PyGILState_Ensure()',
-        r'call PyRun_SimpleString("exec(\"%s\")")' % command,
+        r'call PyRun_SimpleString("exec(r\"\"\"%s\"\"\")")' % command,
         r'call PyGILState_Release($1)',
     ]
     arguments = ['gdb', '-p', str(pid), '-batch']
@@ -47,7 +47,7 @@ def make_gdb_args(pid, command):
 def make_lldb_args(pid, command):
     statements = [
         r'expr void * $gil = (void *) PyGILState_Ensure()',
-        r'expr (void) PyRun_SimpleString("exec(\"%s\")")' % command,
+        r'expr (void) PyRun_SimpleString("exec(r\"\"\"%s\"\"\")")' % command,
         r'expr (void) PyGILState_Release($gil)',
     ]
     arguments = ['lldb', '-p', str(pid), '--batch']
