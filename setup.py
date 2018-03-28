@@ -25,7 +25,7 @@ setup(
     install_requires=[
         'click>=5.1,<6.0',
     ],
-    platforms=['Any'],
+    platforms=['linux', 'darwin'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

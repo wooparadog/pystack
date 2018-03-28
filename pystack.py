@@ -8,12 +8,18 @@ import subprocess
 import tempfile
 import platform
 import functools
+import codecs
+import locale
 
 import click
 
 
 FILE_OPEN_COMMAND = r'f = open(\"%s\", \"w\")'
 FILE_CLOSE_COMMAND = r'f.close()'
+
+UTILITY_COMMANDS = [
+    r'itervalues = lambda d:getattr(d, \"itervalues\", d.values)()',
+]
 
 GREENLET_STACK_COMMANDS = [
     r'import gc,greenlet,traceback',
@@ -29,7 +35,7 @@ THREAD_STACK_COMMANDS = [
     r'f.write(\"Dumping Threads....\\n\\n\\n\")',
     r'f.write(\"\\n---------------\\n\\n\".join('
     r'\"\".join(traceback.format_stack(o)) for o in '
-    r'sys._current_frames().itervalues()))',
+    r'itervalues(sys._current_frames())))',
 ]
 
 
@@ -57,6 +63,10 @@ def make_lldb_args(pid, command):
 
 def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
     """Executes a file in a running Python process."""
+    # TextIOWrapper of Python 3 is so strange.
+    sys_stdout = getattr(sys.stdout, 'buffer', sys.stdout)
+    sys_stderr = getattr(sys.stderr, 'buffer', sys.stderr)
+
     make_args = make_gdb_args
     environ = dict(os.environ)
     if (
@@ -71,6 +81,7 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
     os.chmod(tmp_path, 0o777)
     commands = []
     commands.append(FILE_OPEN_COMMAND)
+    commands.extend(UTILITY_COMMANDS)
     commands.extend(THREAD_STACK_COMMANDS)
     if include_greenlet:
         commands.extend(GREENLET_STACK_COMMANDS)
@@ -82,11 +93,14 @@ def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
         args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     if verbose:
-        print(out, file=sys.stderr)
-        print(err, file=sys.stderr)
+        sys_stderr.write(b'Standard Output:\n%s\n' % out)
+        sys_stderr.write(b'Standard Error:\n%s\n' % err)
+        sys_stderr.flush()
 
-    for chunk in iter(functools.partial(os.read, tmp_fd, 1024), ''):
-        sys.stdout.write(chunk)
+    for chunk in iter(functools.partial(os.read, tmp_fd, 1024), b''):
+        sys_stdout.write(chunk)
+    sys_stdout.write(b'\n')
+    sys_stdout.flush()
 
 
 CONTEXT_SETTINGS = {
@@ -101,12 +115,27 @@ CONTEXT_SETTINGS = {
 @click.option('-d', '--debugger', type=click.Choice(['gdb', 'lldb']))
 @click.option('-v', '--verbose', default=False, is_flag=True,
               help="Verbosely print error and warnings")
-def main(pid, include_greenlet, debugger, verbose):
+def cli_main(pid, include_greenlet, debugger, verbose):
     '''Print stack of python process.
 
     $ pystack <pid>
     '''
     return print_stack(pid, include_greenlet, debugger, verbose)
+
+
+def tolerate_missing_locale():
+    if codecs.lookup(locale.getpreferredencoding()).name != 'ascii':
+        return
+    # Dear Click, we really don't need any non-ascii output. Please don't
+    # crash yourself because you don't like the unicode design of Python 3.
+    # (http://click.pocoo.org/5/python3/#python-3-surrogate-handling)
+    os.environ.setdefault('LC_ALL', 'C.UTF-8')
+    os.environ.setdefault('LANG', 'C.UTF-8')
+
+
+def main():
+    tolerate_missing_locale()
+    cli_main()
 
 
 if __name__ == '__main__':
