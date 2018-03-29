@@ -41,9 +41,9 @@ THREAD_STACK_COMMANDS = [
 
 def make_gdb_args(pid, command):
     statements = [
-        r'call PyGILState_Ensure()',
-        r'call PyRun_SimpleString("exec(r\"\"\"%s\"\"\")")' % command,
-        r'call PyGILState_Release($1)',
+        r'call (void *) PyGILState_Ensure()',
+        r'call (void) PyRun_SimpleString("exec(r\"\"\"%s\"\"\")")' % command,
+        r'call (void) PyGILState_Release((void *) $1)',
     ]
     arguments = ['gdb', '-p', str(pid), '-batch']
     arguments.extend("-eval-command=%s" % s for s in statements)
