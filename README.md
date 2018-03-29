@@ -8,14 +8,10 @@ Idea stolen from [pyrasite](https://github.com/lmacken/pyrasite)
 
 ## Install
 
-```
-$ pip install pystack-debugger
-```
+    $ pip install pystack-debugger
 
 ## Usage
 
 You may need to run it with `sudo`.
 
-```
-$ sudo pystack <pid> [--include-greenlet]
-```
+    $ sudo pystack [--include-greenlet] <pid>

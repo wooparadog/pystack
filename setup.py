@@ -25,6 +25,9 @@ setup(
     install_requires=[
         'click>=5.1,<6.0',
     ],
+    setup_requires=[
+        'setuptools>=38.6.0',
+    ],
     platforms=['linux', 'darwin'],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -36,6 +39,8 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
         'Topic :: Software Development',
         'Topic :: Software Development :: Debuggers',
