@@ -1,3 +1,7 @@
+# 0.8.0
+
+- The Python 3.6 in both client and server are supported. (GH-9)
+
 # 0.7.1
 
 - Rename the PyPI project to "pystack-debugger" since the "pystack" was used.
