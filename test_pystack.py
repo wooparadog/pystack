@@ -5,11 +5,12 @@ import subprocess
 import platform
 import time
 
-from pytest import fixture, mark, param
+from pytest import fixture, mark, param, raises
 from distutils.spawn import find_executable
 from click.testing import CliRunner
 
-from pystack import cli_main, tolerate_missing_locale
+from pystack import (
+    cli_main, tolerate_missing_locale, find_debugger, DebuggerNotFound)
 
 
 skipif_non_gdb = mark.skipif(
@@ -43,6 +44,15 @@ def cli():
     return CliRunner()
 
 
+def test_find_debugger():
+    assert find_debugger('sh') == '/bin/sh'
+    with raises(DebuggerNotFound) as error:
+        find_debugger('shhhhhhhhhhhhhhhhhhhhhhhhh')
+    assert error.value.args[0] == (
+        'Could not find "shhhhhhhhhhhhhhhhhhhhhhhhh" in your'
+        ' PATH environment variable')
+
+
 @mark.parametrize(('process', 'debugger'), [
     param(STATEMENTS['sleep'], 'gdb', marks=[skipif_non_gdb, skipif_darwin]),
     param(STATEMENTS['sleep'], 'lldb', marks=skipif_non_lldb),
@@ -52,3 +62,11 @@ def test_smoke(cli, process, debugger):
     assert not result.exception
     assert result.exit_code == 0
     assert '  File "<string>", line 1, in <module>\n' in result.output
+
+
+@mark.parametrize('process', [STATEMENTS['sleep']], indirect=['process'])
+def test_smoke_debugger_not_found(cli, mocker, process):
+    mocker.patch('pystack.find_debugger', side_effect=DebuggerNotFound('oops'))
+    result = cli.invoke(cli_main, [str(process.pid)])
+    assert result.exit_code == 1
+    assert 'DebuggerNotFound: oops' in result.output
