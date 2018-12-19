@@ -10,6 +10,7 @@ import platform
 import functools
 import codecs
 import locale
+import distutils.spawn
 
 import click
 
@@ -45,7 +46,7 @@ def make_gdb_args(pid, command):
         r'call (void) PyRun_SimpleString("exec(r\"\"\"%s\"\"\")")' % command,
         r'call (void) PyGILState_Release((void *) $1)',
     ]
-    arguments = ['gdb', '-p', str(pid), '-batch']
+    arguments = [find_debugger('gdb'), '-p', str(pid), '-batch']
     arguments.extend("-eval-command=%s" % s for s in statements)
     return arguments
 
@@ -56,9 +57,21 @@ def make_lldb_args(pid, command):
         r'expr (void) PyRun_SimpleString("exec(r\"\"\"%s\"\"\")")' % command,
         r'expr (void) PyGILState_Release($gil)',
     ]
-    arguments = ['lldb', '-p', str(pid), '--batch']
+    arguments = [find_debugger('lldb'), '-p', str(pid), '--batch']
     arguments.extend('--one-line=%s' % s for s in statements)
     return arguments
+
+
+def find_debugger(name):
+    debugger = distutils.spawn.find_executable(name)
+    if not debugger:
+        raise DebuggerNotFound(
+            'Could not find "%s" in your PATH environment variable' % name)
+    return debugger
+
+
+class DebuggerNotFound(Exception):
+    pass
 
 
 def print_stack(pid, include_greenlet=False, debugger=None, verbose=False):
@@ -120,7 +133,11 @@ def cli_main(pid, include_greenlet, debugger, verbose):
 
     $ pystack <pid>
     '''
-    return print_stack(pid, include_greenlet, debugger, verbose)
+    try:
+        print_stack(pid, include_greenlet, debugger, verbose)
+    except DebuggerNotFound as e:
+        click.echo('DebuggerNotFound: %s' % e.args[0], err=True)
+        click.get_current_context().exit(1)
 
 
 def tolerate_missing_locale():
