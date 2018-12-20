@@ -1,3 +1,7 @@
+# 0.9.0
+
+- Report error information if GDB/LLDB is not found. (GH-10)
+
 # 0.8.0
 
 - The Python 3.6 in both client and server are supported. (GH-9)
