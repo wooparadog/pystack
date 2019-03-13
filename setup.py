@@ -19,7 +19,7 @@ setup(
     keywords=['pystack', 'pstack', 'jstack', 'gdb', 'lldb', 'greenlet'],
     entry_points={
         'console_scripts': [
-            ['pystack = pystack:main'],
+            'pystack = pystack:main',
         ],
     },
     install_requires=[
