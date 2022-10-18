@@ -1,11 +1,17 @@
-FROM ubuntu:bionic
+FROM quay.io/fedora/fedora:37
 
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get install -y \
-        python2.7 python3.6 tox gdb lldb strace && \
-    ln -s /usr/bin/lldb-6.0 /usr/bin/lldb && \
-    rm -rf /var/lib/apt/lists/*
+RUN dnf install -y --setopt=install_weak_deps=False \
+        python2.7 \
+        python3.6 \
+        python3.7 \
+        python3.8 \
+        python3.9 \
+        python3.10 \
+        tox \
+        gdb \
+        lldb \
+        strace && \
+    dnf clean all
 ADD . /pystack
 WORKDIR /pystack
 
