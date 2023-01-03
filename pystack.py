@@ -32,7 +32,7 @@ GREENLET_STACK_COMMANDS = [
 ]
 
 THREAD_STACK_COMMANDS = [
-    r'import gc,traceback,itertools,sys',
+    r'import traceback,sys',
     r'f.write(\"Dumping Threads....\\n\\n\\n\")',
     r'f.write(\"\\n---------------\\n\\n\".join('
     r'\"\".join(traceback.format_stack(o)) for o in '
