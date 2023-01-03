@@ -12,7 +12,6 @@ RUN dnf install -y --setopt=install_weak_deps=False \
         lldb \
         strace && \
     dnf clean all
-ADD . /pystack
 WORKDIR /pystack
 
 CMD ["tox"]
