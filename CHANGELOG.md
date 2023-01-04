@@ -1,3 +1,9 @@
+# 0.10.0
+
+- Fix command line arguments of newer LLDB/GDB (GH-14)
+- Fix entry points in `setup.py` (GH-11)
+- Test on Python 3.11
+
 # 0.9.0
 
 - Report error information if GDB/LLDB is not found. (GH-10)
