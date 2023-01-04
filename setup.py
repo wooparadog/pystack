@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='pystack-debugger',
-    version='0.9.0',
+    version='0.10.0',
     description='Tool to print python thread and greenlet stacks',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
