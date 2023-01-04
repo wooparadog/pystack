@@ -1,0 +1,9 @@
+venv/
+build/
+dist/
+__pycache__/
+.tox/
+.python-version
+
+*.pyc
+*.egg-info

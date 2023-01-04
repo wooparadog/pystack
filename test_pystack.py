@@ -45,7 +45,7 @@ def cli():
 
 
 def test_find_debugger():
-    assert find_debugger('sh') == '/bin/sh'
+    assert find_debugger('true') == '/usr/bin/true'
     with raises(DebuggerNotFound) as error:
         find_debugger('shhhhhhhhhhhhhhhhhhhhhhhhh')
     assert error.value.args[0] == (

@@ -32,7 +32,7 @@ GREENLET_STACK_COMMANDS = [
 ]
 
 THREAD_STACK_COMMANDS = [
-    r'import gc,traceback,itertools,sys',
+    r'import traceback,sys',
     r'f.write(\"Dumping Threads....\\n\\n\\n\")',
     r'f.write(\"\\n---------------\\n\\n\".join('
     r'\"\".join(traceback.format_stack(o)) for o in '
@@ -46,7 +46,8 @@ def make_gdb_args(pid, command):
         r'call (void) PyRun_SimpleString("exec(r\"\"\"%s\"\"\")")' % command,
         r'call (void) PyGILState_Release((void *) $1)',
     ]
-    arguments = [find_debugger('gdb'), '-p', str(pid), '-batch']
+    arguments = [find_debugger('gdb'), '-p', str(pid), '-nx', '-batch']
+    arguments.extend(['-iex', 'set debuginfod enabled on'])
     arguments.extend("-eval-command=%s" % s for s in statements)
     return arguments
 
@@ -58,7 +59,8 @@ def make_lldb_args(pid, command):
         r'expr (void) PyGILState_Release($gil)',
     ]
     arguments = [find_debugger('lldb'), '-p', str(pid), '--batch']
-    arguments.extend('--one-line=%s' % s for s in statements)
+    for s in statements:
+        arguments.extend(['--one-line', s])
     return arguments
 
 
