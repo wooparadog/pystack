@@ -23,7 +23,7 @@ setup(
         ],
     },
     install_requires=[
-        'click>=5.1,<6.0',
+        'click',
     ],
     setup_requires=[
         'setuptools>=38.6.0',
