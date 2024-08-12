@@ -1,3 +1,8 @@
+# 0.11.0
+
+- No more restrict the version range of click (GH-15)
+- Fix compatibility on Python 3.12 (GH-17)
+
 # 0.10.0
 
 - Fix command line arguments of newer LLDB/GDB (GH-14)
