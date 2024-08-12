@@ -10,7 +10,7 @@ import platform
 import functools
 import codecs
 import locale
-import distutils.spawn
+import shutil
 
 import click
 
@@ -65,7 +65,7 @@ def make_lldb_args(pid, command):
 
 
 def find_debugger(name):
-    debugger = distutils.spawn.find_executable(name)
+    debugger = shutil.which(name)
     if not debugger:
         raise DebuggerNotFound(
             'Could not find "%s" in your PATH environment variable' % name)
