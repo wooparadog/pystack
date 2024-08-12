@@ -1,8 +1,8 @@
 [![PyPI](https://img.shields.io/pypi/v/pystack-debugger.svg)](https://pypi.org/project/pystack-debugger/)
 
-# pystack
+# pystack-debugger
 
-The pystack is to python as jstack is to java.
+The pystack-debugger is to python as jstack is to java.
 
 It's a debug tool to print python threads or greenlet stacks.
 
@@ -23,9 +23,18 @@ You may need to run it with `sudo`.
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pystack-debugger.svg)](https://pypi.org/project/pystack-debugger/)
 [![PyPI - Implementation](https://img.shields.io/pypi/implementation/pystack-debugger.svg)](https://pypi.org/project/pystack-debugger/)
 
-The pystack is compatible with CPython 2.7+ and CPython 3.6+ in both client
-(the debugger) and server (the destination process).
+The pystack is compatible with CPython 3.8+ in both client side (the debugger)
+and server side (the destination process).
 
-Using PyPy may work in client (the debugger) but it is untested. Do not attempt
-to attach a PyPI process as destination since the pystack debugger uses gdb/lldb
-to invoke the CPython ABI.
+Using PyPy may work in client side (the debugger) but it is untested. Do not
+attempt to attach a PyPy process as destination. It may lead to unexpected and
+undefined behavior, because the pystack debugger uses gdb/lldb to invoke the
+CPython ABI.
+
+## Development
+
+Run testing on a container environment:
+
+    $ podman machine start
+    $ ./test.sh
+    $ ./test.sh coverage html

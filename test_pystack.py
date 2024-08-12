@@ -4,9 +4,9 @@ import sys
 import subprocess
 import platform
 import time
+import shutil
 
 from pytest import fixture, mark, param, raises
-from distutils.spawn import find_executable
 from click.testing import CliRunner
 
 from pystack import (
@@ -14,9 +14,9 @@ from pystack import (
 
 
 skipif_non_gdb = mark.skipif(
-    not find_executable('gdb'), reason='gdb not found')
+    shutil.which('gdb') is None, reason='gdb not found')
 skipif_non_lldb = mark.skipif(
-    not find_executable('lldb'), reason='lldb not found')
+    shutil.which('lldb') is None, reason='lldb not found')
 skipif_darwin = mark.skipif(
     platform.system().lower() == 'darwin', reason='gdb on darwin is unstable')
 
