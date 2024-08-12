@@ -7,6 +7,7 @@ RUN dnf install -y --setopt=install_weak_deps=False \
         python3.11 \
         python3.12 \
         tox \
+        python-coverage \
         gdb \
         lldb \
         which \

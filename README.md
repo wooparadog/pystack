@@ -30,3 +30,11 @@ Using PyPy may work in client side (the debugger) but it is untested. Do not
 attempt to attach a PyPy process as destination. It may lead to unexpected and
 undefined behavior, because the pystack debugger uses gdb/lldb to invoke the
 CPython ABI.
+
+## Development
+
+Run testing on a container environment:
+
+    $ podman machine start
+    $ ./test.sh
+    $ ./test.sh coverage html
