@@ -8,6 +8,14 @@ It's a debug tool to print python threads or greenlet stacks.
 
 Idea stolen from [pyrasite](https://github.com/lmacken/pyrasite).
 
+## Requirements
+
+- **Python 3.8+** (CPython implementation)
+- **Debugger**: Either `gdb` (Linux) or `lldb` (macOS/Linux)
+- **Privileges**: Root access (`sudo`) to attach to other processes
+
+**Note**: On some Linux systems, you may need to adjust the `ptrace_scope` setting to allow debugger attachment.
+
 ## Install
 
     $ pip install pystack-debugger
